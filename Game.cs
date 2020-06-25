@@ -23,8 +23,8 @@ namespace TPF
 		public Game()
 		{
 			var rnd = new Random();
-			//limite = rnd.Next(LOWER, UPPER);
-			limite = 6;
+			limite = rnd.Next(LOWER, UPPER);
+			//limite = 7;
 			
 			naipesHuman = Enumerable.Range(1, WIDTH).OrderBy(x => rnd.Next()).Take(WIDTH / 2).ToList();
 			
@@ -34,18 +34,22 @@ namespace TPF
 				}
 			}
 			
+			/*
 			List<int> cartasIA = new List<int>();
 			List<int> cartasHumano = new List<int>();
 			cartasHumano.Add(1);
 			cartasHumano.Add(2);
-			cartasIA.Add(3);
+			cartasHumano.Add(3);
 			cartasIA.Add(4);
+			cartasIA.Add(5);
+			cartasIA.Add(6);
 			
 			player1.incializar(cartasIA, cartasHumano, limite);
 			player2.incializar(cartasHumano, cartasIA, limite);
+			*/
 			
-			//player1.incializar(naipesComputer, naipesHuman, limite);
-			//player2.incializar(naipesHuman, naipesComputer, limite);
+			player1.incializar(naipesComputer, naipesHuman, limite);
+			player2.incializar(naipesHuman, naipesComputer, limite);
 			
 		}
 		
@@ -53,7 +57,16 @@ namespace TPF
 		private void printScreen()
 		{
 			Console.WriteLine();
-			Console.WriteLine("Limite:" + limite.ToString());
+			Console.WriteLine("Limite: " + limite.ToString());
+			Console.WriteLine();
+		}
+		
+		private void banner(){
+			Console.WriteLine(
+				"********************************************************************************\n" +
+				"****************                 CTEDyA - Juego               ******************\n" +
+				"********************************************************************************\n"
+			);
 		}
 		
 		private void turn(Jugador jugador, Jugador oponente, List<int> naipes)
@@ -82,17 +95,47 @@ namespace TPF
 			return limite < 0;
 		}
 		
-		public void play()
+		public void iniciar()
 		{
+			int opcion = -1;
+			while(opcion != 0){
+				banner();
+				Console.WriteLine("ingrese una opcion: \n" +
+				                  "\n" +
+				                  "1) Comenzar una nueva partida\n" +
+				                  "0) salir\n");
+				opcion = int.Parse(Console.ReadLine());
+				if(opcion == 1){
+					Console.Clear();
+					play();
+				}
+				else if(opcion == 0){
+					opcion = 0;
+				}
+				else{
+					Console.WriteLine("opcion incorrecta..");
+					Console.ReadKey();
+				}
+				Console.Clear();
+			}
+		}
+		
+		public void play(){
+			banner();
 			while (!this.fin()) {
 				this.printScreen();
-				this.turn(player2, player1, naipesHuman); // Juega el usuario
+				this.turn(player2, player1, naipesHuman);	// Juega el usuario				
 				if (!this.fin()) {
+					Console.Clear();
+					banner();
 					this.printScreen();
 					this.turn(player1, player2, naipesComputer); // Juega la IA
 				}
 			}
+			Console.Clear();
+			banner();
 			this.printWinner();
+			Console.ReadKey();
 		}
 		
 		

@@ -8,7 +8,6 @@ namespace TPF
 	public class ComputerPlayer: Jugador
 	{
 		private ArbolGeneral<int> arbol;
-		private int limite;
 		
 		public ComputerPlayer()
 		{
@@ -16,8 +15,6 @@ namespace TPF
 		
 		public override void  incializar(List<int> cartasPropias, List<int> cartasOponente, int limite)
 		{
-			this.limite = limite;
-			
 			List<ArbolGeneral<int>> arbolesIA = new List<ArbolGeneral<int>>();
 			List<ArbolGeneral<int>> arbolesHumano = new List<ArbolGeneral<int>>();
 			
@@ -32,10 +29,10 @@ namespace TPF
 			arbol = crearArbol(arbolesIA, arbolesHumano, new ArbolGeneral<int>(0), false);
 			funcionEuristica(arbol, limite, -1);
 			
-			Console.WriteLine(arbol.ancho());
-			Console.WriteLine(arbol.altura());
-			Console.WriteLine("------------------");
-			arbol.porNiveles();
+			//Console.WriteLine(arbol.ancho());
+			//Console.WriteLine(arbol.altura());
+			//Console.WriteLine("------------------");
+			//arbol.preOrden();
 		}
 		
 		private ArbolGeneral<int> crearArbol(List<ArbolGeneral<int>> arbolesI, List<ArbolGeneral<int>> arbolesH, ArbolGeneral<int> arbol, bool turno){
@@ -111,6 +108,12 @@ namespace TPF
 					carta = x.getDatoRaiz();
 				}
 			}
+			foreach(ArbolGeneral<int> x in arbol.getHijos()){
+				if(x.getDatoRaiz() == carta){
+					arbol = x;
+				}
+			}
+			Console.WriteLine("carta elegida por IA: " + carta);
 			return carta;
 		}
 		

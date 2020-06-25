@@ -131,7 +131,7 @@ namespace TPF
 		// recorridos        >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 		
 		public void preOrden(){
-			Console.WriteLine(this.getDatoRaiz());
+			Console.WriteLine(this.getDatoRaiz() + this.estadoGana().ToString());
 			foreach(ArbolGeneral<T> arbol in this.getHijos()){
 				arbol.preOrden();
 			}
