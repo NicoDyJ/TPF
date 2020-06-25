@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace juegoIA
+namespace TPF
 {
 	public abstract class Jugador
 	{
