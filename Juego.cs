@@ -15,15 +15,13 @@ namespace TPF
 				/*
    				List<int> cartasIA = new List<int>();
 				List<int> cartasHumano = new List<int>();
-				cartasIA.Add(1);
-				cartasIA.Add(2);
+				cartasHumano.Add(1);
+				cartasHumano.Add(2);
 				cartasIA.Add(3);
-				cartasHumano.Add(4);
-				cartasHumano.Add(5);
-				cartasHumano.Add(6);
+				cartasIA.Add(4);
 				
 				ComputerPlayer compu = new ComputerPlayer();
-				compu.incializar(cartasIA, cartasHumano, 5);
+				compu.incializar(cartasIA, cartasHumano, 6);
 				*/
 				
 				

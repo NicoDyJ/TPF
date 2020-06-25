@@ -10,8 +10,9 @@ namespace TPF
 	{
 		private T dato;
 		private List<NodoGeneral<T>> hijos;
-		bool visitado = false;
-		
+		private bool visitado = false;
+		private bool gana = false;
+			
 		public NodoGeneral(T dato){		
 			this.dato = dato;
 			this.hijos = new List<NodoGeneral<T>>();
@@ -43,6 +44,17 @@ namespace TPF
 		
 		public bool estadoVisitado(){
 			return visitado;
+		}
+		
+		public void seGana(){
+			gana = true;
+		}
+		public void sePierde(){
+			gana = false;
+		}
+		
+		public bool estadoGana(){
+			return gana;
 		}
 	}
 }

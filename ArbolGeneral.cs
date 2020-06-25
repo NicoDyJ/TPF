@@ -60,6 +60,17 @@ namespace TPF
 			return raiz.estadoVisitado();
 		}
 		
+		public void seGana(){
+			raiz.seGana();
+		}
+		
+		public void sePierde(){
+			raiz.sePierde();
+		}
+		
+		public bool estadoGana(){
+			return raiz.estadoGana();
+		}
 		
 		// Ejercicio 4- A)   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 		
@@ -131,7 +142,7 @@ namespace TPF
 			cola.encolar(this);
 			while(!cola.esVacia()){
 				ArbolGeneral<T> dato = cola.desencolar();
-				Console.WriteLine(dato.getDatoRaiz());
+				Console.WriteLine(dato.getDatoRaiz() + dato.estadoGana().ToString());
 				foreach(ArbolGeneral<T> x in dato.getHijos()){
 					cola.encolar(x);
 				}

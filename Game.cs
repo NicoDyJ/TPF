@@ -23,7 +23,8 @@ namespace TPF
 		public Game()
 		{
 			var rnd = new Random();
-			limite = rnd.Next(LOWER, UPPER);
+			//limite = rnd.Next(LOWER, UPPER);
+			limite = 6;
 			
 			naipesHuman = Enumerable.Range(1, WIDTH).OrderBy(x => rnd.Next()).Take(WIDTH / 2).ToList();
 			
@@ -32,8 +33,19 @@ namespace TPF
 					naipesComputer.Add(i);
 				}
 			}
-			player1.incializar(naipesComputer, naipesHuman, limite);
-			player2.incializar(naipesHuman, naipesComputer, limite);
+			
+			List<int> cartasIA = new List<int>();
+			List<int> cartasHumano = new List<int>();
+			cartasHumano.Add(1);
+			cartasHumano.Add(2);
+			cartasIA.Add(3);
+			cartasIA.Add(4);
+			
+			player1.incializar(cartasIA, cartasHumano, limite);
+			player2.incializar(cartasHumano, cartasIA, limite);
+			
+			//player1.incializar(naipesComputer, naipesHuman, limite);
+			//player2.incializar(naipesHuman, naipesComputer, limite);
 			
 		}
 		
