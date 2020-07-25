@@ -68,7 +68,7 @@ namespace TPF
 			raiz.sePierde();
 		}
 		
-		public bool estadoGana(){
+		public string estadoGana(){
 			return raiz.estadoGana();
 		}
 		
@@ -131,7 +131,7 @@ namespace TPF
 		// recorridos        >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 		
 		public void preOrden(){
-			Console.WriteLine(this.getDatoRaiz() + this.estadoGana().ToString());
+			Console.WriteLine(this.getDatoRaiz());
 			foreach(ArbolGeneral<T> arbol in this.getHijos()){
 				arbol.preOrden();
 			}
@@ -142,9 +142,29 @@ namespace TPF
 			cola.encolar(this);
 			while(!cola.esVacia()){
 				ArbolGeneral<T> dato = cola.desencolar();
-				Console.WriteLine(dato.getDatoRaiz() + dato.estadoGana().ToString());
+				Console.WriteLine(dato.getDatoRaiz() + dato.estadoGana());
 				foreach(ArbolGeneral<T> x in dato.getHijos()){
 					cola.encolar(x);
+				}
+			}
+		}
+		
+		public void resultados(int limite, string cadena, bool raizz){
+			// es una modificacion del recorrido preOrden para que pueda imprimir todos los resultados
+			// de cada camino del arbol
+			
+			if(raizz == false){
+				cadena =  cadena + this.getDatoRaiz().ToString() + ", ";
+				limite = limite - int.Parse(this.getDatoRaiz().ToString());
+			}
+			else
+				raizz = false;
+			if(limite < 0){
+				Console.WriteLine(cadena + "= " + this.estadoGana());
+			}
+			else{
+				foreach(ArbolGeneral<T> arbol in this.getHijos()){
+					arbol.resultados(limite, cadena, raizz);
 				}
 			}
 		}

@@ -11,7 +11,7 @@ namespace TPF
 		private T dato;
 		private List<NodoGeneral<T>> hijos;
 		private bool visitado = false;
-		private bool gana = false;
+		private string gana = "";
 			
 		public NodoGeneral(T dato){		
 			this.dato = dato;
@@ -47,13 +47,13 @@ namespace TPF
 		}
 		
 		public void seGana(){
-			gana = true;
+			gana = "gana IA";
 		}
 		public void sePierde(){
-			gana = false;
+			gana = "pierde IA";
 		}
 		
-		public bool estadoGana(){
+		public string estadoGana(){
 			return gana;
 		}
 	}

@@ -12,16 +12,26 @@ namespace TPF
 		public static int UPPER = 35;
 		public static int LOWER = 25;
 		
-		private Jugador player1 = new ComputerPlayer();
-		private Jugador player2 = new HumanPlayer();
-		private List<int> naipesHuman = new List<int>();
-		private List<int> naipesComputer = new List<int>();
+		private Jugador player1;   // ComputerPlayer
+		private Jugador player2;   // HumanPlayer
+		private List<int> naipesHuman;
+		private List<int> naipesComputer;
 		private int limite;
 		private bool juegaHumano = false;
+		private List<int> colaDeJugadas;    // contendra las jugadas realizadas durante el juego
 		
+		public Game(){	}
 		
-		public Game()
-		{
+		private void reset(){
+			// instancia todos los atributos del Game
+			
+			player1 = new ComputerPlayer();
+			player2 = new HumanPlayer();
+			naipesHuman = new List<int>();
+			naipesComputer = new List<int>();
+			juegaHumano = false;
+			colaDeJugadas = new List<int>();
+			
 			var rnd = new Random();
 			limite = rnd.Next(LOWER, UPPER);
 			//limite = 7;
@@ -33,30 +43,14 @@ namespace TPF
 					naipesComputer.Add(i);
 				}
 			}
-			
-			/*
-			List<int> cartasIA = new List<int>();
-			List<int> cartasHumano = new List<int>();
-			cartasHumano.Add(1);
-			cartasHumano.Add(2);
-			cartasHumano.Add(3);
-			cartasIA.Add(4);
-			cartasIA.Add(5);
-			cartasIA.Add(6);
-			
-			player1.incializar(cartasIA, cartasHumano, limite);
-			player2.incializar(cartasHumano, cartasIA, limite);
-			*/
+			// inicializa los jugadores con las cartas elegidas aleatoriamente
 			
 			player1.incializar(naipesComputer, naipesHuman, limite);
 			player2.incializar(naipesHuman, naipesComputer, limite);
-			
 		}
-		
 		
 		private void printScreen()
 		{
-			Console.WriteLine();
 			Console.WriteLine("Limite: " + limite.ToString());
 			Console.WriteLine();
 		}
@@ -72,6 +66,7 @@ namespace TPF
 		private void turn(Jugador jugador, Jugador oponente, List<int> naipes)
 		{
 			int carta = jugador.descartarUnaCarta();
+			colaDeJugadas.Add(carta);
 			naipes.Remove(carta);
 			limite -= carta;
 			oponente.cartaDelOponente(carta);
@@ -79,15 +74,22 @@ namespace TPF
 		}
 		
 		
-		
 		private void printWinner()
 		{
 			if (!juegaHumano) {
-				Console.WriteLine("Gano el Ud");
+				Console.WriteLine("Ganaste !!");
 			} else {
-				Console.WriteLine("Gano Computer");
+				Console.WriteLine("Gano la Computadora");
 			}
 			
+		}
+		
+		private void imprimirJugadas(){
+			string cadena = "";
+			foreach(int x in colaDeJugadas){
+				cadena = cadena + x.ToString() + ", ";
+			}
+			Console.WriteLine("las jugadas realizadas son: " + cadena);
 		}
 		
 		private bool fin()
@@ -97,15 +99,20 @@ namespace TPF
 		
 		public void iniciar()
 		{
+			// menu principal del juego
+			
 			int opcion = -1;
 			while(opcion != 0){
 				banner();
-				Console.WriteLine("ingrese una opcion: \n" +
+				Console.WriteLine("Ingrese una opcion: \n" +
 				                  "\n" +
 				                  "1) Comenzar una nueva partida\n" +
-				                  "0) salir\n");
+				                  "0) Salir\n");
 				opcion = int.Parse(Console.ReadLine());
 				if(opcion == 1){
+					// reset reinstanciara todos los atributos del game y creara todo lo necesario 
+					// para una nueva partida
+					reset();
 					Console.Clear();
 					play();
 				}
@@ -113,31 +120,62 @@ namespace TPF
 					opcion = 0;
 				}
 				else{
-					Console.WriteLine("opcion incorrecta..");
+					Console.WriteLine("Opcion incorrecta...");
 					Console.ReadKey();
 				}
 				Console.Clear();
 			}
 		}
 		
-		public void play(){
+		private void play(){
 			banner();
 			while (!this.fin()) {
 				this.printScreen();
+				consultas();
+			}
+			Console.WriteLine("");
+			this.printWinner();
+			Console.ReadKey();
+			Console.Clear();
+		}
+	
+		private void consultas(){
+			string opcion;
+			Console.WriteLine("ingrese una opcion: \n" +
+			                  "\n" +
+			                  "a) tirar una carta\n" +
+			                  "b) ver todos los resultados posibles\n" +
+			                  "c) ver todas las jugadas\n");
+			opcion = Console.ReadLine();
+			Console.WriteLine("");
+			if(opcion == "a"){
 				this.turn(player2, player1, naipesHuman);	// Juega el usuario				
 				if (!this.fin()) {
 					Console.Clear();
 					banner();
 					this.printScreen();
 					this.turn(player1, player2, naipesComputer); // Juega la IA
+					Console.WriteLine("");
 				}
 			}
-			Console.Clear();
-			banner();
-			this.printWinner();
-			Console.ReadKey();
+			else if(opcion == "b"){
+				ComputerPlayer compu = (ComputerPlayer)player1;
+				compu.resultadosPosibles(limite);
+				Console.ReadKey();
+				Console.Clear();
+				banner();
+			}
+			else if(opcion == "c"){
+				imprimirJugadas();
+				Console.ReadKey();
+				Console.Clear();
+				banner();
+			}
+			else{
+				Console.WriteLine("opcion incorrecta");
+			}
+			Console.WriteLine("");
 		}
-		
 		
 	}
 }

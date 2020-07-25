@@ -32,6 +32,7 @@ namespace TPF
 		public override int descartarUnaCarta()
 		{
 			int carta = 0;
+			//imprime los naipes disponibles
 			Console.Write("Naipes disponibles (Usuario): <<< ");
 			for (int i = 0; i < naipes.Count; i++) {
 				Console.Write(naipes[i].ToString());
@@ -40,7 +41,8 @@ namespace TPF
 				}
 			}
 			Console.WriteLine(" >>>");
-		
+		    
+			//pide un naipe por teclado y se la retorna
 			Console.WriteLine();
 			if (!random_card) {
 				Console.Write("Ingrese naipe: ");
@@ -49,7 +51,7 @@ namespace TPF
 				Int32.TryParse(entrada, out carta);
 				while (!naipes.Contains(carta)) {
 					Console.WriteLine("");
-					Console.Write("Opcion Invalida.Ingrese otro naipe: ");
+					Console.Write("Opcion Invalida. Ingrese otro naipe: ");
 					entrada = Console.ReadLine();
 					Int32.TryParse(entrada, out carta);
 				}

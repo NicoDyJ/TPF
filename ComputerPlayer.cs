@@ -15,6 +15,9 @@ namespace TPF
 		
 		public override void  incializar(List<int> cartasPropias, List<int> cartasOponente, int limite)
 		{
+			// crea listas de arboles a partir de las cartas propias y del oponente
+			// para luego pasarlas por parametro a la funcion crearArbol()
+			
 			List<ArbolGeneral<int>> arbolesIA = new List<ArbolGeneral<int>>();
 			List<ArbolGeneral<int>> arbolesHumano = new List<ArbolGeneral<int>>();
 			
@@ -26,18 +29,19 @@ namespace TPF
 				ArbolGeneral<int> nuevoArbol = new ArbolGeneral<int>(x);
 				arbolesHumano.Add(nuevoArbol);
 			}
+			
 			arbol = crearArbol(arbolesIA, arbolesHumano, new ArbolGeneral<int>(0), false);
 			funcionEuristica(arbol, limite, -1);
 			
-			//Console.WriteLine(arbol.ancho());
-			//Console.WriteLine(arbol.altura());
-			//Console.WriteLine("------------------");
-			//arbol.preOrden();
+		}
+		
+		public void resultadosPosibles(int limite){
+			arbol.resultados(limite, "", true);
 		}
 		
 		private ArbolGeneral<int> crearArbol(List<ArbolGeneral<int>> arbolesI, List<ArbolGeneral<int>> arbolesH, ArbolGeneral<int> arbol, bool turno){
-			turno = !turno;
-			List<ArbolGeneral<int>> arboles;
+			turno = !turno;      // cada llamada a crearArbol cambiara el turno de cartas a usar en el algoritmo
+			List<ArbolGeneral<int>> arboles; 
 			if(turno == true){
 				arboles = arbolesH;
 			}
@@ -45,6 +49,10 @@ namespace TPF
 				arboles = arbolesI;
 			}
 			foreach(ArbolGeneral<int> x in arboles){
+				//cada arbol que no este visitado, se clonara y se agregara como hijo del arbol pasado 
+				//por parametro. luego se marcara como visitado para ir descartando en futuras llamadas
+				//recursivas. 
+				
 				if(x.estadoVisitado() == false){
 					ArbolGeneral<int> nuevoArbol = new ArbolGeneral<int>(x.getDatoRaiz());
 					arbol.agregarHijo(nuevoArbol);
@@ -57,6 +65,8 @@ namespace TPF
 		}
 		
 		private void funcionEuristica(ArbolGeneral<int> arbolminmax, int limit, int turno){
+			// turno ira turnando al IA y al usuario. si turno es par, es turno de IA. impar para el usuario
+			
 			turno++;
 			int dato = arbolminmax.getDatoRaiz();
 			limit = limit - dato;
@@ -69,28 +79,33 @@ namespace TPF
 				}
 			}
 			else{
-				bool decide = false;
+				// si es turno de IA, entonces la funcion euristica minimiza, si es turno del usuario maximiza
+				// por defecto si es turno de IA, se implementa que gana IA a menos que haya un solo resultado
+				// negativo obtenido de la recursion, entonces se pone en el arbol que pierde (minimizar). 
+				// lo contrario con el turno del usuario.
+				
+				string decide = "";
 				if(turno%2 == 0){
-					decide = true;
+					decide = "gana IA";
 				}
 				else{
-					decide = false;
+					decide = "pierde IA";
 				}
 				foreach(ArbolGeneral<int> x in arbolminmax.getHijos()){
 					funcionEuristica(x, limit, turno);
-					bool ganador = x.estadoGana();
+					string ganador = x.estadoGana();
 					if(turno%2 == 0){
-						if(ganador == false){
-							decide = false;
+						if(ganador == "pierde IA"){
+							decide = "pierde IA";
 						}
 					}
 					else{
-						if(ganador == true){
-							decide = true;
+						if(ganador == "gana IA"){
+							decide = "gana IA";
 						}
 					}
 				}
-				if(decide == true){
+				if(decide == "gana IA"){
 					arbolminmax.seGana();
 				}
 				else{
@@ -101,24 +116,29 @@ namespace TPF
 		
 		public override int descartarUnaCarta()
 		{
+			//busca en los hijos del arbol el estado "gana IA" y elige esa carta
 			int carta = arbol.getHijos()[0].getDatoRaiz();
 			foreach(ArbolGeneral<int> x in arbol.getHijos()){
-				bool ganar = x.estadoGana();
-				if(ganar == true){
+				string ganar = x.estadoGana();
+				if(ganar == "gana IA"){
 					carta = x.getDatoRaiz();
 				}
 			}
+			//elige el camino del arbol que posee la carta elegida previamente 
 			foreach(ArbolGeneral<int> x in arbol.getHijos()){
 				if(x.getDatoRaiz() == carta){
 					arbol = x;
 				}
 			}
-			Console.WriteLine("carta elegida por IA: " + carta);
+			// imprime y retorna la carta
+			Console.WriteLine("Naipe elegido por la Computadora: " + carta);
 			return carta;
 		}
 		
 		public override void cartaDelOponente(int carta)
 		{
+			//busca en los hijos del arbol, la carta jugada por el usuario y ese subarbol sera el nuevo
+			//arbol del computer player asi tomando ese camino 
 			foreach(ArbolGeneral<int> x in this.arbol.getHijos()){
 				int dato = x.getDatoRaiz();
 				if(dato == carta){
